@@ -11,8 +11,13 @@ if(!isset($_SESSION['user'])){
 <?php
 
 include_once('../database/connection.php');
-$fetch ="SELECT * FROM crud";
-$r = mysqli_query($con,$fetch);
+$mail = $_GET['mail'];
+$fetch = "SELECT * FROM crud WHERE mail=?";
+$stmt = mysqli_prepare($con, $fetch);
+mysqli_stmt_bind_param($stmt, "s", $mail);
+mysqli_stmt_execute($stmt);
+$r = mysqli_stmt_get_result($stmt);
+
 
 
 ?>
@@ -41,14 +46,17 @@ $r = mysqli_query($con,$fetch);
                 <th>MAIL ID</th>
                 <TH >TASK</TH>
                 <th>ACTIONS</th>
+                <th>STATUS</th>
             </tr>
         
                 <?php 
-                while($row = mysqli_fetch_assoc($r)){
-                    $id=$row['id'];
-                    $ename=$row['Ename'];
+                while($row = mysqli_fetch_array($r,MYSQLI_ASSOC)){
+                    $id=$row['emp_id'];
+                    $ename=$row['name'];
                     $mail= $row['mail'];
                     $work = $row['work'];
+                    $tid =$row['task_no'];
+                    $sts =$row['status'];
 
 
 
@@ -61,7 +69,8 @@ $r = mysqli_query($con,$fetch);
                     <td>'.$ename.'</td>
                     <td>'.$mail.'</td>
                     <td>'.$work.'</td>
-                    
+                     <td><button style="background-color:blue;color:white;"><a href="view.php?taskid='.$tid.'" style="color:white;">VIEW</a></button>
+                    <td>'.$sts.'</td>
                     </tr>';
 
 

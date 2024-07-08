@@ -1,4 +1,4 @@
 <?php
-$con =mysqli_connect("localhost","root","","php_project");
+$con =mysqli_connect("localhost","root","","todo");
 
 ?>

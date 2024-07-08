@@ -13,21 +13,22 @@ if(!isset($_SESSION['user'])){
 require('../database/connection.php');
 $id =$_GET['updateid'];
 
-$sql ="select * from `crud` where id=$id";
+$sql ="select * from `crud` where task_no=$id";
 
 $r =mysqli_query($con,$sql);
 $row =mysqli_fetch_assoc($r);
-$name =$row['Ename'];
-$mail =$row['mail'];
+$name =$row['name'];
+$emp_id = $row['emp_id'];
 $work =$row['work'];
 $id =$_GET['updateid'];
 
 
 if(isset($_POST['submit'])){
     $ename =$_POST['ename'];
-    $mail =$_POST['mail'];
+    $id = $_POST['eid'];
+    $tid = $row['task_no'];
     $work =$_POST['work'];
-    $sql ="update `crud` set id=$id, Ename='$ename', mail='$mail', work='$work' WHERE id=$id";
+    $sql ="update `crud` set emp_id=$id, name='$ename', work='$work' WHERE task_no=$tid";
     $r= mysqli_query($con,$sql);
     if($r){
         header('location:display.php');
@@ -49,10 +50,13 @@ if(isset($_POST['submit'])){
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Task</title>
-    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
 <div class="container">
+<ul style="float: left;">
+            <li ><a href="admin.php"><button>back</button></a></li>
+        </ul>
         <ul>
             <li><a href="display.php"><button>TASKS</button></a></li>
         </ul>
@@ -63,10 +67,11 @@ if(isset($_POST['submit'])){
     <div class="cont-1">
         <div class="cont-2">
             <form  method="post">
-                <label for="ename">EMPLOYEE NAME :</label><br>
-                <input type="text" name="ename" id="ename" value="<?php echo $name ?>"><br><br>
-                <label for="mail">Email :</label><br>
-                <input type="email" name="mail" id="mail" value="<?php  echo $mail ?>"><br><br>
+                <label for="ename">EMPLOYEE ID:</label><br>
+                <input type="text" name="eid" id="eid" value="<?php echo $emp_id?>"><br><br>
+                <label for="ename">EMPLOYEE NAME:</label><br>
+                <input type="text" name="ename" id="ename" required value="<?php  echo $name ?>"><br><br>
+                
                 <label for="work">TASK:</label><br>
                 <textarea name="work" id="work" cols="30" rows="5"  ><?php  echo $work ?></textarea><br><br>
                 <input type="submit" value="UPDATE" class="sub" name="submit">

@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
@@ -56,9 +56,13 @@ if (isset($_POST['submit'])) {
         $sql = "SELECT * FROM register WHERE mail='$mail'";
         $result = mysqli_query($con, $sql);
         $user = mysqli_fetch_array($result, MYSQLI_ASSOC);
+        $sts = $user['status'];
+        
         if ($user) {
             if (password_verify($pwd, $user["pwd"])) {
-                session_start();
+
+                if($sts == 1){
+                    session_start();
                 $_SESSION['user'] = "yes";
 
                 if (isset($_POST['remember'])) {
@@ -66,8 +70,13 @@ if (isset($_POST['submit'])) {
                     setcookie('remember_email', $mail, time() + (3600 * 24 * 365));
                     setcookie('remember_pwd', $pwd, time() + (3600 * 24 * 365));
                 }
-                header("location:user/viewtask.php");
+                header("location:user/viewtask.php?mail=$mail");
                 die();
+                }else{
+                    echo "YOU ARE BLOCKED BY ADMIN";
+                }
+
+                
                 /* echo "success"; */
             } else {
                 echo "USER NOT FOUND";
